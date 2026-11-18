@@ -1,0 +1,84 @@
+/* Fernwick & Co. design tokens — Spec Sec. 11 / 12.
+   Colour is applied through these custom properties only. */
+
+:root {
+  /* Type */
+  --font-heading: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Work Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Spacing scale (Sec. 12) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Radius (Sec. 12) */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* Layout */
+  --container: 1240px;
+  --navbar-h: 64px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f6f1e9;
+  --surface: #fffdf8;
+  --surface-2: #efe8da;
+  --border: #e0d6c4;
+  --text: #1e2320;
+  --text-muted: #5f655e;
+  --primary: #1f4d3f;
+  --primary-hover: #173b30;
+  --on-primary: #fffdf8;
+  --primary-soft: #dce8e1;
+  --accent: #a8431f;
+  --accent-soft: #f3ddd0;
+  --star: #c98a12;
+  --success: #2d7a4d;
+  --success-soft: #dcebdd;
+  --danger: #b3261e;
+  --danger-soft: #f6dad6;
+  --hero-bg: #1f4d3f;
+  --img-bg: #ffffff;
+  --overlay: rgba(30, 35, 32, 0.45);
+  --shadow-1: 0 1px 2px rgba(30, 35, 32, 0.06), 0 6px 18px rgba(30, 35, 32, 0.07);
+  --shadow-2: 0 12px 40px rgba(30, 35, 32, 0.18);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #151311;
+  --surface: #1e1b18;
+  --surface-2: #2a2622;
+  --border: #3b352e;
+  --text: #ede7dc;
+  --text-muted: #a59d90;
+  --primary: #7cc0a4;
+  --primary-hover: #95cfb7;
+  --on-primary: #0f1f19;
+  --primary-soft: #1f332b;
+  --accent: #f0a079;
+  --accent-soft: #3a2a20;
+  --star: #e8b84a;
+  --success: #6cc48d;
+  --success-soft: #1e3326;
+  --danger: #f07f76;
+  --danger-soft: #3b1f1d;
+  --hero-bg: #1c2a25;
+  --img-bg: #f4f1ea;
+  --overlay: rgba(0, 0, 0, 0.6);
+  --shadow-1: 0 0 0 1px rgba(255, 255, 255, 0.03);
+  --shadow-2: 0 16px 48px rgba(0, 0, 0, 0.55);
+}
