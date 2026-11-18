@@ -30,7 +30,8 @@ function validate(form) {
     errors.username = 'Use at least 3 characters — letters, numbers or underscore.';
   if (form.password.length < 6)
     errors.password = 'Password must be at least 6 characters.';
-  if (form.confirmPassword !== form.password)
+  if (!form.confirmPassword) errors.confirmPassword = 'Please confirm your password.';
+  else if (form.confirmPassword !== form.password)
     errors.confirmPassword = 'Passwords do not match.';
   return errors;
 }
