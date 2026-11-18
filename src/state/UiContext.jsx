@@ -8,6 +8,8 @@ export function UiProvider({ children }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [toast, setToast] = useState(null);
+  // The store page slots its search box into the navbar centre (Sec. 7.1).
+  const [navbarSearch, setNavbarSearch] = useState(null);
   const toastTimer = useRef(null);
 
   const showToast = useCallback((message) => {
@@ -26,13 +28,15 @@ export function UiProvider({ children }) {
       drawerOpen,
       checkoutOpen,
       toast,
+      navbarSearch,
+      setNavbarSearch,
       showToast,
       openDrawer,
       closeDrawer,
       openCheckout,
       closeCheckout,
     }),
-    [drawerOpen, checkoutOpen, toast, showToast, openDrawer, closeDrawer, openCheckout, closeCheckout]
+    [drawerOpen, checkoutOpen, toast, navbarSearch, showToast, openDrawer, closeDrawer, openCheckout, closeCheckout]
   );
 
   return <UiContext.Provider value={value}>{children}</UiContext.Provider>;

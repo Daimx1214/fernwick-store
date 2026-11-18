@@ -63,6 +63,23 @@ export function CartProvider({ children }) {
     [state.items, showToast]
   );
 
+  // Add several units at once (product page quantity picker).
+  const addToCartWithQty = useCallback(
+    (product, qty) => {
+      const existing = state.items.find((i) => i.id === product.id);
+      const room = MAX_QTY - (existing ? existing.qty : 0);
+      if (room <= 0) {
+        showToast('Maximum 10 per item');
+        return false;
+      }
+      const n = Math.min(qty, room);
+      for (let i = 0; i < n; i += 1) dispatch({ type: 'ADD', product });
+      showToast('Added to cart');
+      return true;
+    },
+    [state.items, showToast]
+  );
+
   const removeFromCart = useCallback((id) => dispatch({ type: 'REMOVE', id }), []);
   const updateQuantity = useCallback(
     (id, qty) => dispatch({ type: 'SET_QTY', id, qty }),
@@ -77,6 +94,7 @@ export function CartProvider({ children }) {
       items: state.items,
       totals,
       addToCart,
+      addToCartWithQty,
       removeFromCart,
       updateQuantity,
       increment,
@@ -84,7 +102,7 @@ export function CartProvider({ children }) {
       clearCart,
       openDrawer,
     }),
-    [state.items, totals, addToCart, removeFromCart, updateQuantity, increment, decrement, clearCart, openDrawer]
+    [state.items, totals, addToCart, addToCartWithQty, removeFromCart, updateQuantity, increment, decrement, clearCart, openDrawer]
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
