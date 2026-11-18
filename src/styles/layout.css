@@ -46,7 +46,7 @@
 /* Announcement bar */
 .announcement {
   background: var(--hero-bg);
-  color: var(--on-primary);
+  color: var(--on-hero);
   text-align: center;
   font-size: 12.5px;
   letter-spacing: 0.02em;
@@ -187,7 +187,7 @@
 /* Hero strip */
 .hero {
   background: var(--hero-bg);
-  color: var(--on-primary);
+  color: var(--on-hero);
   border-radius: var(--radius-lg);
   padding: var(--space-6) var(--space-5);
   margin-bottom: var(--space-5);
