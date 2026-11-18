@@ -1066,10 +1066,6 @@
   background: var(--surface-2);
 }
 
-.login-card__demo {
-  margin-top: var(--space-4);
-}
-
 .login-card__note {
   font-size: 13px;
   color: var(--text-muted);

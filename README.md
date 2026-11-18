@@ -27,10 +27,8 @@ npm test        # run the Vitest unit tests
 
 No environment variables or API keys are needed — FakeStoreAPI is public.
 
-**Try the demo login:** on the Login page, press “Use demo account” (public
-sample credentials from the FakeStoreAPI docs: `mor_2314` / `83r5^_`), then
-Log in. Or create your own account on the Sign up page — it is stored in
-this browser and works with the same login form. At checkout, the test card
+**Getting in:** create your own account on the Sign up page — it is stored
+in this browser and works with the login form. At checkout, the test card
 `4242 4242 4242 4242` passes validation.
 
 ## What it does
@@ -95,8 +93,8 @@ Login works two ways, checked in this order:
    stored in plain text**: only a SHA-256 digest (via `crypto.subtle`) is
    kept, and login compares digests. A local session is marked with a
    `local-<username>` token in the usual `shop.auth.v1` slot.
-2. **The API's sample accounts** (including the demo login) fall through
-   to `POST /auth/login` exactly as before.
+2. **The API's sample accounts** fall through to `POST /auth/login`
+   exactly as before — the login form accepts them too.
 
 One consequence worth knowing: local accounts exist only in the browser
 that created them — clearing site data removes them, and they do not

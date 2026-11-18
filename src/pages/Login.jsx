@@ -4,10 +4,8 @@ import { useAuth } from '../state/AuthContext.jsx';
 import { useUi } from '../state/UiContext.jsx';
 import { EyeIcon, EyeOffIcon } from '../components/icons.jsx';
 
-// Login page — Spec Sec. 7.3 / 10. Authenticates against POST /auth/login.
-// The demo credentials are public sample data from the FakeStoreAPI docs.
-const DEMO_USERNAME = 'mor_2314';
-const DEMO_PASSWORD = '83r5^_';
+// Login page — Spec Sec. 7.3 / 10. Authenticates against POST /auth/login
+// (and against locally created sign-up accounts first — see AuthContext).
 
 export default function Login() {
   const { isLoggedIn, login } = useAuth();
@@ -48,12 +46,6 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const fillDemo = () => {
-    setUsername(DEMO_USERNAME);
-    setPassword(DEMO_PASSWORD);
-    setError('');
   };
 
   return (
@@ -114,12 +106,6 @@ export default function Login() {
           </button>
         </form>
 
-        <button type="button" className="text-btn login-card__demo" onClick={fillDemo}>
-          Use demo account
-        </button>
-        <p className="login-card__note">
-          Demo account from the public FakeStoreAPI docs — it fills the form, you press Log in.
-        </p>
         <p className="login-card__switch">
           New to Fernwick?{' '}
           <Link to={next ? `/signup?next=${encodeURIComponent(next)}` : '/signup'}>
