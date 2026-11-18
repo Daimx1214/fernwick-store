@@ -5,8 +5,9 @@ A small, print-catalogue-feeling storefront built with **React 18 + Vite**,
 properties. Product data comes from the public
 [FakeStoreAPI](https://fakestoreapi.com). The store has a warm paper light
 theme and a warm charcoal dark theme, a persistent slide-out cart, exact
-integer-cent price math, a simulated two-step checkout, and login against the
-FakeStoreAPI auth endpoint.
+integer-cent price math, a simulated two-step checkout, and accounts: login
+against the FakeStoreAPI auth endpoint, plus a sign-up page whose accounts
+are kept locally in the browser (explained under **Accounts** below).
 
 ## Screenshots
 
@@ -28,7 +29,9 @@ No environment variables or API keys are needed — FakeStoreAPI is public.
 
 **Try the demo login:** on the Login page, press “Use demo account” (public
 sample credentials from the FakeStoreAPI docs: `mor_2314` / `83r5^_`), then
-Log in. At checkout, the test card `4242 4242 4242 4242` passes validation.
+Log in. Or create your own account on the Sign up page — it is stored in
+this browser and works with the same login form. At checkout, the test card
+`4242 4242 4242 4242` passes validation.
 
 ## What it does
 
@@ -53,7 +56,13 @@ Log in. At checkout, the test card `4242 4242 4242 4242` passes validation.
   confirmation with an order number (`LK-YYMMDD-XXXX`) and a delivery
   estimate of today + 3 days. Orders are saved locally and listed on the
   Orders page. **Card data is never stored anywhere.**
-- **Product page, login page, orders page, 404 page**, all in both themes.
+- **Accounts** — a login page against the API's sample users and a sign-up
+  page with full field validation (username rules, password confirmation,
+  taken-username checks against both the local store and the API's sample
+  usernames). Signing up logs you in straight away. See **Accounts** below
+  for why sign-up accounts live in the browser.
+- **Product page, login page, sign-up page, orders page, 404 page**, all in
+  both themes.
 
 ## API endpoints used
 
@@ -63,12 +72,36 @@ Log in. At checkout, the test card `4242 4242 4242 4242` passes validation.
 | `GET /products/{id}` | Fallback for a direct visit to a product not in the cached list |
 | `GET /products/categories` | Documented; used to validate the category map |
 | `POST /auth/login` | Login; returns a JWT whose `sub` claim is the user id |
-| `GET /users` | Fallback lookup of the logged-in user's name after login |
+| `POST /users` | Best-effort sign-up echo (returns an id, saves nothing — see **Accounts**) |
+| `GET /users` | Fallback lookup of the logged-in user's name after login; also the sign-up username-clash check |
 | `GET /users/{id}` | Prefills the checkout name/email |
 | `POST /carts` | Best-effort simulated order submit at checkout (result ignored) |
 
 FakeStoreAPI is a mock backend: writes return believable responses but save
 nothing, so orders live in the browser (`shop.orders.v1`).
+
+## Accounts
+
+Login works two ways, checked in this order:
+
+1. **Accounts created on the Sign up page** are stored locally in this
+   browser (`shop.users.v1`). This is a deliberate design decision forced
+   by the mock API, not a shortcut: `POST /users` echoes back a new id but
+   does not persist the user, and `POST /auth/login` only authenticates
+   the API's ten built-in sample users — so an account created purely
+   through the API could never log back in. The sign-up page still sends
+   the `POST /users` call (best-effort, like the checkout's `POST /carts`),
+   but the account of record is the local one. Passwords are **never
+   stored in plain text**: only a SHA-256 digest (via `crypto.subtle`) is
+   kept, and login compares digests. A local session is marked with a
+   `local-<username>` token in the usual `shop.auth.v1` slot.
+2. **The API's sample accounts** (including the demo login) fall through
+   to `POST /auth/login` exactly as before.
+
+One consequence worth knowing: local accounts exist only in the browser
+that created them — clearing site data removes them, and they do not
+follow you to another device. That is the honest limit of building
+accounts on top of a mock API that keeps nothing.
 
 ## State design
 
@@ -80,6 +113,7 @@ Four small stores instead of one big one, each a Context + hook:
 | Cart (`CartContext` + `cartReducer`) | `{ items: [{id, title, price, image, category, qty}] }` | `shop.cart.v1` |
 | UI (`UiContext`) | drawer open, checkout open, toast | no |
 | Auth (`AuthContext`) | token, userId, username, firstName | `shop.auth.v1` |
+| Local accounts (`utils/localUsers`) | accounts created on the Sign up page: username, email, name, SHA-256 password digest | `shop.users.v1` |
 | Theme (`ThemeContext`) | `light` / `dark` / `system` preference | `shop.theme` |
 
 The cart is a pure reducer (`ADD`, `REMOVE`, `SET_QTY`, `INCREMENT`,
@@ -111,17 +145,23 @@ The two worked examples from the specification are unit tests:
 
 ## Tests
 
-`npm test` runs Vitest over `src/state/cart.test.js`: reducer behaviour
-(add / increment / cap at 10 / decrement-to-remove / SET_QTY clamping /
-HYDRATE dropping bad data), `calculateTotal` (empty cart, both worked
-examples, the exact $100 free-shipping boundary, and a 0.1 + 0.2 float
-case), the category map (`jewelery` spelling, clothing combining two API
-categories), and badge boundary values (4.5, 300, 25, 200).
+`npm test` runs Vitest over `src/state/cart.test.js` and
+`src/utils/localUsers.test.js`: reducer behaviour (add / increment / cap
+at 10 / decrement-to-remove / SET_QTY clamping / HYDRATE dropping bad
+data), `calculateTotal` (empty cart, both worked examples, the exact $100
+free-shipping boundary, and a 0.1 + 0.2 float case), the category map
+(`jewelery` spelling, clothing combining two API categories), badge
+boundary values (4.5, 300, 25, 200), and the local-account helpers
+(register → verify with the right password, rejection of the wrong one,
+duplicate usernames refused, and the stored record holding a SHA-256
+digest — never the plain password).
 
 ## Known limitations
 
-- FakeStoreAPI is a mock: logins use its public sample accounts, and orders
-  placed here exist only in this browser's localStorage.
+- FakeStoreAPI is a mock: it cannot persist new users, so accounts created
+  on the Sign up page exist only in this browser's localStorage (passwords
+  as SHA-256 digests, never plain text), while sample-account logins use
+  the API. Orders placed here likewise exist only in this browser.
 - Checkout is a simulation — the card form validates format (including Luhn)
   but no payment is processed and card details are never stored or sent.
 - Product prices in an already-saved cart are snapshots; the catalogue is
