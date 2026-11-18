@@ -7,6 +7,7 @@ import RequireAuth from './components/RequireAuth.jsx';
 import Store from './pages/Store.jsx';
 import ProductPage from './pages/ProductPage.jsx';
 import Login from './pages/Login.jsx';
+import Signup from './pages/Signup.jsx';
 import Orders from './pages/Orders.jsx';
 import NotFound from './pages/NotFound.jsx';
 
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/" element={<Store />} />
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route
           path="/orders"
           element={

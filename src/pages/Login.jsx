@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../state/AuthContext.jsx';
 import { useUi } from '../state/UiContext.jsx';
 import { EyeIcon, EyeOffIcon } from '../components/icons.jsx';
@@ -119,6 +119,12 @@ export default function Login() {
         </button>
         <p className="login-card__note">
           Demo account from the public FakeStoreAPI docs — it fills the form, you press Log in.
+        </p>
+        <p className="login-card__switch">
+          New to Fernwick?{' '}
+          <Link to={next ? `/signup?next=${encodeURIComponent(next)}` : '/signup'}>
+            Create an account
+          </Link>
         </p>
       </div>
     </main>

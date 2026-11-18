@@ -1076,6 +1076,12 @@
   margin-top: var(--space-1);
 }
 
+.login-card__switch {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: var(--space-5);
+}
+
 /* Orders */
 .orders-head {
   display: flex;
